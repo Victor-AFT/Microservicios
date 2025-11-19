@@ -5,6 +5,6 @@ def create_app():
     
     # existing code omitted
     from . import views
-    #app.register_blueprint(views.bp)
+    app.register_blueprint(views.bp)
 
     return app
