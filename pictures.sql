@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS pictures (
 -- Crea la tabla 'tags' si no existe
 CREATE TABLE IF NOT EXISTS tags (
     tag VARCHAR(32) NOT NULL,
-    pictures_id VARCHAR(36) NOT NULL,
+    picture_id VARCHAR(36) NOT NULL,
     confidence VARCHAR(255),
     date TIMESTAMP,
     
