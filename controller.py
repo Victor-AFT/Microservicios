@@ -98,7 +98,7 @@ def image_tags(image_url,min_confidence,credentials_json):
                         if t["confidence"] > min_confidence
                     ]
             
-
+            delete_image_url(image_url,credentials)
             return tags
             #delete_image_url(image_url,credentials)
         except Exception as e:

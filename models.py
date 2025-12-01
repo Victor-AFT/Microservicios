@@ -71,6 +71,7 @@ def query_filtros(min_date, max_date):
     
     query = text("""
         SELECT p.id,
+               p.path,
                DATE_FORMAT(p.date, '%Y-%m-%d %H:%i:%s') AS fecha,
                GROUP_CONCAT(t.tag, ', ') AS tags,
                AVG(t.confidence) AS confidence
@@ -86,6 +87,7 @@ def query_filtros(min_date, max_date):
         return [
             {
                 "id": r.id,
+                "path":r.path,
                 "fecha": r.fecha,
                 "tags": r.tags,
                 "confidence": 1.0  # valor fijo o calculado

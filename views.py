@@ -51,16 +51,25 @@ def ping():
 
 @bp.route("/images", methods=["GET"])
 def get_images():
-    #tags = request.args.get("tags")
-    #if not min_date and max_date:
-    #return jsonify({"error": "Imagen no encontrada"}), 404
+    min_date = request.args.get("min_date")
+    max_date = request.args.get("max_date")
+    if not min_date and max_date:
+        return jsonify({"error": "Imagen no encontrada"}), 404
     try:
-        imgs = models.query_filtros(request.args.get("min_date"), request.args.get("max_date"))
-        print(imgs)
-        return jsonify(imgs)
-    
+        respuesta=[]
+        imgs = models.query_filtros(min_date, max_date)
+        #print(imgs)
+        for cc in imgs:
+            print(cc)
+            respuesta.append({
+                'id': cc['id'],
+                "size": f"{controller.image_size(cc['path'])} KB",
+                "Date Registration": cc['fecha'],
+                "tags": cc['tags'],
+                "data":f"{controller.imagen_base64(cc['path'])}"
+            })
+        return jsonify(respuesta),201
     except Exception as e:
-        # en producción usa un logger en vez de print
         return jsonify({"error": str(e)}), 500
 
 
@@ -71,19 +80,21 @@ def get_image(image_id):
 
     if not image_id:
         return jsonify({"error": "Imagen no encontrada"}), 404
+    try:
+        info = models.query_info_picture(image_id)
 
-    info = models.query_info_picture(image_id)
-
-    for cc in info:
-        return jsonify({
-            'id': cc['id'],
-            "size": f"{controller.image_size(cc['path'])} KB",
-            "path":cc['path'],
-            "Date Registration": cc['date'],
-            "tags": cc['tags'],
-            "data":f"{controller.imagen_base64(cc['path'])}"
-        }), 201
-    
+        for cc in info:
+            return jsonify({
+                'id': cc['id'],
+                "size": f"{controller.image_size(cc['path'])} KB",
+                "path":cc['path'],
+                "Date Registration": cc['date'],
+                "tags": cc['tags'],
+                "data":f"{controller.imagen_base64(cc['path'])}"
+            }), 201
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
   
             
 
