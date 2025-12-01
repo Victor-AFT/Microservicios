@@ -10,7 +10,7 @@ def upload_image():
     try:
         
         data = request.get_json()
-
+        #MIRAR DOCKER CP Y EL SECRET MANAGER
         file_json = data.get('file_json')
         credentials = data.get('credentials')
 
@@ -50,34 +50,20 @@ def ping():
     return jsonify({"status": "ok", "message": "Servidor funcionando correctamente"}), 200
 
 @bp.route("/images", methods=["GET"])
-def index():
-    min_date = request.args.get("min_date")
-    max_date = request.args.get("max_date")
-    tags = request.args.get("tags")
+def get_images():
+    #tags = request.args.get("tags")
+    #if not min_date and max_date:
+    #return jsonify({"error": "Imagen no encontrada"}), 404
+    try:
+        imgs = models.query_filtros(request.args.get("min_date"), request.args.get("max_date"))
+        print(imgs)
+        return jsonify(imgs)
+    
+    except Exception as e:
+        # en producción usa un logger en vez de print
+        return jsonify({"error": str(e)}), 500
 
-    images = []
 
-    if tags:
-        params = {}
-        if min_date:
-            params["min_date"] = min_date
-        if max_date:
-            params["max_date"] = max_date
-        params["tags"] = tags
-
-        query_string = urlencode(params)
-        url = f"{API_URL}?{query_string}"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            images = response.json()
-
-    return jsonify({
-            "id": image_uuid,
-            "size": controller.image_size(path_image),
-            "Date Registration": models.query_fecha_registro(image_uuid),
-            "tags": models.query_picture_tags(image_uuid),
-        }), 201
 
 @bp.route("/images/<image_id>", methods=["GET"])
 def get_image(image_id):

@@ -11,7 +11,7 @@ import os
 
 
 #FUNCIONES
-
+#ESTA FUNCION NO ES NECESARIA
 def obtener_ultima_fecha(ruta_imagen):
    
     try:

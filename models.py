@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
 #CONSULTAS DE BASE DE DATOS
 engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
 
@@ -65,3 +66,32 @@ def query_info_picture(id_image):
     for img_id, data in grouped.items()
     ]
     return combined
+
+def query_filtros(min_date, max_date):
+    
+    query = text("""
+        SELECT p.id,
+               DATE_FORMAT(p.date, '%Y-%m-%d %H:%i:%s') AS fecha,
+               GROUP_CONCAT(t.tag, ', ') AS tags,
+               AVG(t.confidence) AS confidence
+        FROM pictures p
+        LEFT JOIN tags t ON p.id = t.pictures_id
+        WHERE p.date BETWEEN :fecha_min AND :fecha_max
+        GROUP BY p.id, p.date
+        ORDER BY p.date
+    """)
+
+    with Session(engine) as session:
+        results = session.execute(query, {"fecha_min": min_date, "fecha_max": max_date})
+        return [
+            {
+                "id": r.id,
+                "fecha": r.fecha,
+                "tags": r.tags,
+                "confidence": 1.0  # valor fijo o calculado
+            }
+            for r in results
+        ]
+
+    return results
+
