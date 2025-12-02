@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
+
 #CONSULTAS DE BASE DE DATOS
 engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
 
@@ -13,7 +14,7 @@ def query_fecha_registro(id_image):
 
 def query_picture_tags(id_image):
     with engine.connect() as conn:
-            query = text("SELECT tag, confidence FROM tags WHERE pictures_id = :id")
+            query = text("SELECT tag, confidence FROM tags WHERE picture_id = :id")
             result = conn.execute(query, {"id": id_image})
             columns = result.keys()
             tags_confidence = [
@@ -33,7 +34,7 @@ def query_info_picture(id_image):
                     tgs.confidence,
                     tgs.date
                 FROM pictures pc
-                JOIN tags tgs ON tgs.pictures_id =  pc.id
+                JOIN tags tgs ON tgs.picture_id =  pc.id
                 WHERE pc.id = :id
                          """)
             result = conn.execute(query, {"id": id_image})
@@ -76,7 +77,7 @@ def query_filtros(min_date, max_date):
                GROUP_CONCAT(t.tag, ', ') AS tags,
                AVG(t.confidence) AS confidence
         FROM pictures p
-        LEFT JOIN tags t ON p.id = t.pictures_id
+        LEFT JOIN tags t ON p.id = t.picture_id
         WHERE p.date BETWEEN :fecha_min AND :fecha_max
         GROUP BY p.id, p.date
         ORDER BY p.date

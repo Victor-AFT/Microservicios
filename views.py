@@ -10,17 +10,11 @@ def upload_image():
     try:
         
         data = request.get_json()
-        #MIRAR DOCKER CP Y EL SECRET MANAGER
         file_json = data.get('file_json')
-        credentials = data.get('credentials')
-
+        
         if not file_json:
             return jsonify({"error": "JSON no proporcionado"}), 400
 
-        if not credentials:
-            return jsonify({"error": "ficheros de Credenciales no proporcionadas"}), 401
-        
-       
         min_confidence = request.args.get("min_confidence", default=80, type=int)
 
         datos = controller.leer_json(file_json)
@@ -29,10 +23,10 @@ def upload_image():
         image_extension = datos["extension"]
 
         path_image = controller.guardar_imagen_json(file_json)
-        url_image = controller.image_url(image_uuid, image_extension, image_b64str, credentials)
-        tags = controller.image_tags(url_image, min_confidence, credentials)
+        url_image = controller.image_url(image_uuid, image_extension, image_b64str)
+        tags = controller.image_tags(url_image, min_confidence )
         controller.registro_BBDD(image_uuid, path_image, tags)
-        #controller.delete_image_url(url_image,credentials)
+
         #NOTA MIRAR TAGS 
         return jsonify({
             "id": image_uuid,

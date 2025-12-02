@@ -12,22 +12,8 @@ import os
 
 #FUNCIONES
 #ESTA FUNCION NO ES NECESARIA
-def obtener_ultima_fecha(ruta_imagen):
-   
-    try:
-        timestamp = os.path.getmtime(ruta_imagen)
-        FORMATO_FECHA = "%Y-%m-%d %H:%M:%S"
-        fecha_objeto = datetime.fromtimestamp(timestamp)
-        fecha_formateada = fecha_objeto.strftime(FORMATO_FECHA)
-        
-        return fecha_formateada
-
-    except FileNotFoundError:
-        print(f"Error: El archivo '{ruta_imagen}' no se ha encontrado.")
-        return None
-    except Exception as e:
-        print(f"Ocurrió un error: {e}")
-        return None
+file_json_pss='/app/credentials.json'
+UPLOAD_FOLDER = "/app/data"
 
 def obten_fecha_actual():
 
@@ -47,9 +33,9 @@ def leer_json(fichero):
         return None      
     
 #DEVUELVE LA URL  DE LA IMAGEN
-def image_url(uuid,extension,image_strbase64,credentials_json):
+def image_url(uuid,extension,image_strbase64):
     
-    credentials = leer_json(credentials_json)
+    credentials = leer_json(file_json_pss)
 
     imagekit = ImageKit(
     public_key=credentials["imagekit"]["public_key"],
@@ -67,9 +53,9 @@ def image_url(uuid,extension,image_strbase64,credentials_json):
         print(f"Ocurrió un error: {e}")
         return None
     
-def delete_image_url(image_url,credentials_json):
+def delete_image_url(image_url):
     
-    credentials = leer_json(credentials_json)
+    credentials = leer_json(file_json_pss)
 
     imagekit = ImageKit(
     public_key=credentials["imagekit"]["public_key"],
@@ -80,9 +66,9 @@ def delete_image_url(image_url,credentials_json):
     return imagekit.delete_file(file_id=image_url.file_id)
 
 
-def image_tags(image_url,min_confidence,credentials_json):
+def image_tags(image_url,min_confidence):
         
-        credentials = leer_json(credentials_json)
+        credentials = leer_json(file_json_pss)
 
         api_key = credentials["imagga"]["api_key"]
         api_secret = credentials["imagga"]["api_secret"]
@@ -125,7 +111,7 @@ def registro_BBDD(uuid,path_image,image_tags):
     #Tabla que contendrá una fila por cada imagen almacenada en el sistema.
     BBDD_pictures_id=uuid
     BBDD_pictures_path=path_image
-    BBDD_pictures_date=obtener_ultima_fecha(path_image)
+    BBDD_pictures_date=obten_fecha_actual()
 
     try:
          
@@ -169,9 +155,9 @@ def guardar_imagen_json(file_json):
         strbase64=data['data']
 
         imagen_bytes=base64.b64decode(strbase64)
-        ruta_carpeta='images/'
-        os.makedirs(ruta_carpeta,exist_ok=True)
-        ruta_imagen=os.path.join(ruta_carpeta,f"{nombre}{extension}")
+        
+        os.makedirs(UPLOAD_FOLDER,exist_ok=True)
+        ruta_imagen=os.path.join(UPLOAD_FOLDER,f"{nombre}{extension}")
 
         with open(ruta_imagen,"wb") as imagen_file:
              imagen_file.write(imagen_bytes)
