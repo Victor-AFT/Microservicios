@@ -122,41 +122,7 @@ def image_size(ruta_imagen):
             write_log(f"Ocurrió un error: {e}", level="error")
             return None
 
-#REGISTRA LOS DATOS DE LA IMAGEN Y SUS TAGS EN LA BASE DE DATOS
-def registro_BBDD(uuid,path_image,image_tags):
 
-    engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
-
-    #Tabla que contendrá una fila por cada imagen almacenada en el sistema.
-    BBDD_pictures_id=uuid
-    BBDD_pictures_path=path_image
-    BBDD_pictures_date=obten_fecha_actual()
-
-    try:
-         
-        with engine.connect() as conn:
-
-            #tabla pictures
-            query = text(f"INSERT INTO pictures VALUES ('{BBDD_pictures_id}','{BBDD_pictures_path}','{BBDD_pictures_date}')")
-            write_log(f"uso de la funcion registro_BBDD tabla pictures {query}", level="debug")
-            conn.execute(query)
-            conn.commit()
-
-            #Tabla que contendrá las tags asociadas a cada imagen. 
-            for x in image_tags:
-                BBDD_tags_tag=x['tag']
-                BBDD_tags_picture_id=BBDD_pictures_id
-                BBDD_tags_confidence=x['confidence']
-                BBDD_tags_date=obten_fecha_actual()
-
-                query = text(f"INSERT INTO tags VALUES ('{BBDD_tags_tag}','{BBDD_tags_picture_id}','{BBDD_tags_confidence}','{BBDD_tags_date}')")
-                conn.execute(query)
-                conn.commit()
-            write_log(f"uso de la funcion registro_BBDD tabla tag {query}", level="debug")
-                
-    except Exception as e:
-            print(f"Ocurrió un error: {e}")
-            write_log(f"Ocurrió un error: {e}", level="error")
 #DEVUEVE LA IMAGEN COMO STRING EN BASE64
 def imagen_base64(ruta_imagen):
     try:
@@ -193,6 +159,7 @@ def guardar_imagen_json(file_json):
             write_log(f"Ocurrió un error: {e}", level="error")
             return None
         
+
 
 
 
