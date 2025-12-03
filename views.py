@@ -89,6 +89,15 @@ def get_image(image_id):
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-  
+
+#MODO DEBUGGER
+@app.route('/logs', methods=['GET'])
+def get_logs():
+    try:
+        with open('app.log', 'r') as f:
+            content = f.readlines()
+        return jsonify({"logs": content})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
             
 
