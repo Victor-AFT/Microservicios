@@ -37,11 +37,11 @@ def leer_json(fichero):
     try:
         with open(fichero, 'r', encoding='utf-8') as archivo_json:
             data = json.load(archivo_json)
+            write_log(f"uso de la funcion Leer_json {data}", level="debug")
         return data
-
     except Exception as e:
         write_log(f"Ocurrió un error: {e}", level="error")
-        #print(f"Ocurrió un error: {e}")
+        print(f"Ocurrió un error: {e}")
         return None      
     
 #DEVUELVE LA URL  DE LA IMAGEN
@@ -58,11 +58,12 @@ def image_url(uuid,extension,image_strbase64):
     try:
         name_image = f"{uuid}.{extension}"
         upload_info=imagekit.upload(file=image_strbase64, file_name=name_image)
-        
+        write_log(f"uso de la funcion image_url {upload_info.url}", level="debug")
         return upload_info.url
     
     except Exception as e:
         print(f"Ocurrió un error: {e}")
+        write_log(f"Ocurrió un error: {e}", level="error")
         return None
     
 def delete_image_url(image_url):
@@ -74,14 +75,18 @@ def delete_image_url(image_url):
     private_key=credentials["imagekit"]["private_key"],
     url_endpoint = credentials["imagekit"]["url_endpoint"]
     )
-
-    return imagekit.delete_file(file_id=image_url.file_id)
+    try:
+        imagekit.delete_file(file_id=image_url.file_id)
+        write_log(f"uso de la funcion delete_image_url {upload_info.url}", level="debug")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
+        write_log(f"Ocurrió un error: {e}", level="error")
+    return None
 
 
 def image_tags(image_url,min_confidence):
         
         credentials = leer_json(file_json_pss)
-
         api_key = credentials["imagga"]["api_key"]
         api_secret = credentials["imagga"]["api_secret"]
 
@@ -95,12 +100,12 @@ def image_tags(image_url,min_confidence):
                         for t in response.json()["result"]["tags"]
                         if t["confidence"] > min_confidence
                     ]
-            
+            write_log(f"uso de la funcion image_tags {tags}", level="debug")
             delete_image_url(image_url,credentials)
             return tags
-            #delete_image_url(image_url,credentials)
         except Exception as e:
             print(f"Ocurrió un error: {e}")
+            write_log(f"Ocurrió un error: {e}", level="error")
             return None
 #FALTA LA FUNCION PARA ELIMINAR EL RASTRO DE LA WEB
 
@@ -113,6 +118,7 @@ def image_size(ruta_imagen):
     
     except Exception as e:
             print(f"Ocurrió un error: {e}")
+            write_log(f"Ocurrió un error: {e}", level="error")
             return None
 
 #REGISTRA LOS DATOS DE LA IMAGEN Y SUS TAGS EN LA BASE DE DATOS
@@ -156,6 +162,7 @@ def imagen_base64(ruta_imagen):
         return imgstr
     except Exception as e:
             print(f"Ocurrió un error: {e}")
+            write_log(f"Ocurrió un error: {e}", level="error")
             return None
     
 #GUARDA LA IMAGEN DESDE EL JSON
@@ -178,7 +185,9 @@ def guardar_imagen_json(file_json):
 
     except Exception as e:
             print(f"Error al guardar la imagen: {e}")
+            write_log(f"Ocurrió un error: {e}", level="error")
 
             return None
         
+
 
