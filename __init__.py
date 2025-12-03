@@ -6,7 +6,7 @@ def create_app():
     #Configuración de logging
     logging.basicConfig(
         filename='/app/app.log',
-        level=logging.INFO,
+        level=logging.DEBUG,
         format='%(asctime)s %(levelname)s: %(message)s'
     )
     logger = logging.getLogger(__name__)
