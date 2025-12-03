@@ -25,7 +25,7 @@ def upload_image():
         path_image = controller.guardar_imagen_json(file_json)
         url_image = controller.image_url(image_uuid, image_extension, image_b64str)
         tags = controller.image_tags(url_image, min_confidence )
-        controller.registro_BBDD(image_uuid, path_image, tags)
+        models.registro_BBDD(image_uuid, path_image, tags)
 
         #NOTA MIRAR TAGS 
         return jsonify({
