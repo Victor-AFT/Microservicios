@@ -22,9 +22,6 @@ def obten_fecha_actual():
     fecha_formateada = ahora.strftime(FORMATO_FECHA)
     return fecha_formateada
 
-
-
-
 def write_log(message, level="info"):
     if level == "info":
         logger.info(message)
@@ -43,7 +40,8 @@ def leer_json(fichero):
         return data
 
     except Exception as e:
-        print(f"Ocurrió un error: {e}")
+        write_log(f"Ocurrió un error: {e}", level="error")
+        #print(f"Ocurrió un error: {e}")
         return None      
     
 #DEVUELVE LA URL  DE LA IMAGEN
@@ -183,3 +181,4 @@ def guardar_imagen_json(file_json):
 
             return None
         
+
