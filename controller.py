@@ -114,6 +114,7 @@ def image_size(ruta_imagen):
     try:
         size_bytes=os.path.getsize(ruta_imagen)
         size_kb=size_bytes/1024
+        write_log(f"uso de la funcion image_size {size_kb}", level="debug")
         return size_kb
     
     except Exception as e:
@@ -137,6 +138,7 @@ def registro_BBDD(uuid,path_image,image_tags):
 
             #tabla pictures
             query = text(f"INSERT INTO pictures VALUES ('{BBDD_pictures_id}','{BBDD_pictures_path}','{BBDD_pictures_date}')")
+            write_log(f"uso de la funcion registro_BBDD tabla pictures {query}", level="debug")
             conn.execute(query)
             conn.commit()
 
@@ -150,15 +152,17 @@ def registro_BBDD(uuid,path_image,image_tags):
                 query = text(f"INSERT INTO tags VALUES ('{BBDD_tags_tag}','{BBDD_tags_picture_id}','{BBDD_tags_confidence}','{BBDD_tags_date}')")
                 conn.execute(query)
                 conn.commit()
+            write_log(f"uso de la funcion registro_BBDD tabla tag {query}", level="debug")
                 
     except Exception as e:
             print(f"Ocurrió un error: {e}")
-
+            write_log(f"Ocurrió un error: {e}", level="error")
 #DEVUEVE LA IMAGEN COMO STRING EN BASE64
 def imagen_base64(ruta_imagen):
     try:
         with open(ruta_imagen, mode="rb") as img:
                 imgstr = base64.b64encode(img.read())
+        write_log(f"uso de la funcion imagen_base64 ", level="debug")
         return imgstr
     except Exception as e:
             print(f"Ocurrió un error: {e}")
@@ -177,7 +181,8 @@ def guardar_imagen_json(file_json):
         
         os.makedirs(UPLOAD_FOLDER,exist_ok=True)
         ruta_imagen=os.path.join(UPLOAD_FOLDER,f"{nombre}{extension}")
-
+        write_log(f"uso de la funcion guardar_imagen_json {ruta_imagen}", level="debug")
+        
         with open(ruta_imagen,"wb") as imagen_file:
              imagen_file.write(imagen_bytes)
         
@@ -186,8 +191,8 @@ def guardar_imagen_json(file_json):
     except Exception as e:
             print(f"Error al guardar la imagen: {e}")
             write_log(f"Ocurrió un error: {e}", level="error")
-
             return None
         
+
 
 
