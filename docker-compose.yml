@@ -17,7 +17,7 @@ services:
 
   api:
     build:
-      context: ./api
+      context: .
       dockerfile: Dockerfile
     container_name: flask_api
     restart: always
@@ -39,3 +39,4 @@ services:
 
 volumes:
   shared_data:
+
