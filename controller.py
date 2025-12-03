@@ -8,7 +8,7 @@ import base64
 import uuid
 from pathlib import Path
 import os
-
+import logging
 
 #FUNCIONES
 #ESTA FUNCION NO ES NECESARIA
@@ -21,6 +21,20 @@ def obten_fecha_actual():
     ahora = datetime.now()
     fecha_formateada = ahora.strftime(FORMATO_FECHA)
     return fecha_formateada
+
+
+
+
+def write_log(message, level="info"):
+    if level == "info":
+        logger.info(message)
+    elif level == "error":
+        logger.error(message)
+    elif level == "debug":
+        logger.debug(message)
+    else:
+        logger.warning(message)
+
 
 def leer_json(fichero):
     try:
@@ -166,4 +180,6 @@ def guardar_imagen_json(file_json):
 
     except Exception as e:
             print(f"Error al guardar la imagen: {e}")
+
             return None
+        
