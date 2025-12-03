@@ -35,8 +35,9 @@ services:
     volumes:
       - shared_data:/app/data
     ports:
-      - "80:80"
+      - "8080:8080"
 
 volumes:
   shared_data:
+
 
