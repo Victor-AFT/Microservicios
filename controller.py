@@ -15,6 +15,9 @@ import logging
 file_json_pss='/app/credentials.json'
 UPLOAD_FOLDER = "/app/data"
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 def obten_fecha_actual():
 
     FORMATO_FECHA = "%Y-%m-%d %H:%M:%S"
@@ -34,10 +37,10 @@ def write_log(message, level="info"):
 
 
 def leer_json(fichero):
+    write_log(f"uso de la funcion Leer_json {data}", level="debug")
     try:
         with open(fichero, 'r', encoding='utf-8') as archivo_json:
             data = json.load(archivo_json)
-            write_log(f"uso de la funcion Leer_json {data}", level="debug")
         return data
     except Exception as e:
         write_log(f"Ocurrió un error: {e}", level="error")

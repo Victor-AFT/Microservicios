@@ -47,7 +47,7 @@ def upload_image():
         }), 201
 
     except Exception as e:
-        controller.write_log(f"error": str(e)}", level="error")
+        controller.write_log(f"error: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
         
         
@@ -80,7 +80,7 @@ def get_images():
         controller.write_log(f"Peticion GET -> /images  retornando la respuesta ", level="debug")
         return jsonify(respuesta),201
     except Exception as e:
-        controller.write_log(f"error": str(e)}", level="error")
+        controller.write_log(f"error: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
 
 
@@ -105,18 +105,18 @@ def get_image(image_id):
             }), 201
         
     except Exception as e:
-        controller.write_log(f"error": str(e)}", level="error")
+        controller.write_log(f"error: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
 
 #MODO DEBUGGER
-@app.route('/logs', methods=['GET'])
+@bp.route('/logs', methods=['GET'])
 def get_logs():
     try:
         with open('app.log', 'r') as f:
             content = f.readlines()
         return jsonify({"logs": content})
     except Exception as e:
-        controller.write_log(f"error": str(e)}", level="error")
+        controller.write_log(f"error: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
             
 
