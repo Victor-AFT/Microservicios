@@ -15,7 +15,7 @@ RUN pip install --upgrade pip \
 COPY . /app
 
 # Puerto en el que el contenedor escuchará (waitress lo usará)
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["waitress-serve", "--listen=0.0.0.0:8080", "api.app:app"]
+CMD ["waitress-serve", "--listen=0.0.0.0:8080","--call", "app:create_app"]
 

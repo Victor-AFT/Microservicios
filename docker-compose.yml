@@ -15,11 +15,11 @@ services:
     ports:
       - "3306:3306"
 
-  api:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flask_api
+    container_name: Api_PC3
     restart: always
     depends_on:
       - db
