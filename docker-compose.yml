@@ -10,8 +10,8 @@ services:
       MYSQL_USER: mbit
       MYSQL_PASSWORD: mbit
     volumes:
-      - shared_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+      - ./pictures.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
 
@@ -39,5 +39,6 @@ services:
 
 volumes:
   shared_data:
+  db_data:
 
 

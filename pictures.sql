@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS tags (
     date TIMESTAMP,
     
     -- Clave primaria compuesta
-    PRIMARY KEY (tag, pictures_id),
+    PRIMARY KEY (tag, picture_id),
     
     -- Clave foránea que referencia a 'pictures(id)'
-    FOREIGN KEY (pictures_id) REFERENCES pictures(id)
+    FOREIGN KEY (picture_id) REFERENCES pictures(id)
 );

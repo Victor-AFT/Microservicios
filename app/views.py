@@ -1,3 +1,7 @@
+# Autor: Victor Fuentes Toledo
+# Fecha: 2025-12-09
+# Descripción: PC3
+
 from flask import Blueprint, request, jsonify
 from . import controller
 from . import models
@@ -9,29 +13,32 @@ bp = Blueprint('images', __name__, url_prefix='/')
 def upload_image():
     try:
         controller.write_log(f"Peticion POST /upload_image ", level="debug")
-        data = request.get_json()
-        file_json = data.get('file_json')
         
-        if not file_json:
+        data = request.get_json()
+        controller.write_log(f"Peticion POST -> Fichero JSON recibidos{data} ", level="debug")
+        
+        if not data:
             return jsonify({"error": "JSON no proporcionado"}), 400
 
         min_confidence = request.args.get("min_confidence", default=80, type=int)
         
-        controller.write_log(f"Peticion POST -> leyendo json recibido ", level="debug")
-        datos = controller.leer_json(file_json)
-        
-        image_uuid = datos['uuid']
-        image_b64str = datos["data"]
-        image_extension = datos["extension"]
+        controller.write_log(f"Peticion POST -> leyendo contenido ", level="debug")
+        controller.write_log(f"Peticion POST -> leyendo uuid: {data.get('uuid')} ", level="debug")
+        controller.write_log(f"Peticion POST -> leyendo imagen en base64: {data.get('data')} ", level="debug")
+        controller.write_log(f"Peticion POST -> leyendo imagen en Extension: {data.get('extension')} ", level="debug")
+
+        image_uuid = data.get('uuid')
+        image_b64str = data.get("data")
+        image_extension = data.get("extension")
         
         controller.write_log(f"Peticion POST -> guardando imagen ", level="debug")
-        path_image = controller.guardar_imagen_json(file_json)
+        path_image = controller.guardar_imagen_json(image_uuid,image_b64str,image_extension)
         
         controller.write_log(f"Peticion POST -> obteniendo url imagen ", level="debug")
         url_image = controller.image_url(image_uuid, image_extension, image_b64str)
         
         controller.write_log(f"Peticion POST -> obteniendo tags imagen ", level="debug")
-        tags = controller.image_tags(url_image, min_confidence )
+        tags = controller.image_tags(url_image['url'],url_image['file_id'], min_confidence )
         
         controller.write_log(f"Peticion POST -> escribiendo datos picture en BBDD ", level="debug")
         models.registro_BBDD(image_uuid, path_image, tags)
@@ -41,7 +48,7 @@ def upload_image():
         return jsonify({
             "id": image_uuid,
             "size": controller.image_size(path_image),
-            "Date Registration": models.query_fecha_registro(image_uuid),
+            "Date Registration": controller.obten_fecha_actual(),
             "tags": models.query_picture_tags(image_uuid),
             "data":image_b64str
         }), 201
@@ -65,8 +72,9 @@ def get_images():
         return jsonify({"error": "Imagen no encontrada"}), 404
     try:
         respuesta=[]
-        controller.write_log(f"Peticion GET -> /images  buscando las imagenes con los filtros ", level="debug")
+        controller.write_log(f"Peticion GET -> /images  buscando las imagenes con los filtros {min_date,max_date}", level="debug")
         imgs = models.query_filtros(min_date, max_date)
+        controller.write_log(f"Peticion GET -> /images  resultado busqueda  {imgs}", level="debug")
         #print(imgs)
         for cc in imgs:
             print(cc)
@@ -77,10 +85,10 @@ def get_images():
                 "tags": cc['tags'],
                 "data":f"{controller.imagen_base64(cc['path'])}"
             })
-        controller.write_log(f"Peticion GET -> /images  retornando la respuesta ", level="debug")
+        controller.write_log(f"Peticion GET -> /images  retornando la respuesta  {respuesta}", level="debug")
         return jsonify(respuesta),201
     except Exception as e:
-        controller.write_log(f"error: {str(e)}", level="error")
+        controller.write_log(f"error peticion images: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
 
 

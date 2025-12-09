@@ -12,7 +12,10 @@ RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r /app/requirements.txt
 
 # Copiamos el código de la API
-COPY . /app
+COPY . .
+
+# Copiamos credenciales (⚠️ inseguro si se sube la imagen a un registry)
+COPY credentials.json .
 
 # Puerto en el que el contenedor escuchará (waitress lo usará)
 EXPOSE 8080
