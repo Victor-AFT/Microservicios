@@ -15,7 +15,6 @@ import os
 import logging
 
 #FUNCIONES
-#ESTA FUNCION NO ES NECESARIA
 file_json_pss='/app/credentials.json'
 UPLOAD_FOLDER = "/app/"
 
