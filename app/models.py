@@ -5,13 +5,14 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 from . import controller
+
 #CONSULTAS DE BASE DE DATOS
 engine = create_engine("mysql+pymysql://mbit:mbit@db:3306/Pictures")
 
 
 def registro_BBDD(uuid,path_image,image_tags):
     controller.write_log(f"uso de la funcion registro_BBDD", level="debug")
-    #engine = create_engine("mysql+pymysql://mbit:mbit@localhost/Pictures")
+   
     #Tabla que contendrá una fila por cada imagen almacenada en el sistema.
     BBDD_pictures_id=uuid
     BBDD_pictures_path=path_image
@@ -129,7 +130,7 @@ def query_filtros(min_date, max_date):
                 "path":r.path,
                 "fecha": r.fecha,
                 "tags": r.tags,
-                "confidence": 1.0  # valor fijo o calculado
+                "confidence": 1.0  
             }
             for r in results
         ]
