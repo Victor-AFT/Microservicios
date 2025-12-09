@@ -51,8 +51,7 @@ def leer_json(fichero):
             data = json.load(archivo_json)
         return data
     except Exception as e:
-        #write_log(f"error funcion leer_json: {e}", level="error")
-        print(f"Ocurrió un error: {e}")
+        write_log(f"error funcion leer_json: {e}", level="error")
         return None      
     
 #DEVUELVE LA URL  DE LA IMAGEN
@@ -77,7 +76,6 @@ def image_url(uuid,extension,image_strbase64):
         }
     
     except Exception as e:
-        #print(f"Error en la funcion image_url: {e}")
         write_log(f"Error en la funcion image_url: {e}", level="error")
         return None
     
@@ -94,7 +92,6 @@ def delete_image_url(image_url):
         imagekit.delete_file(file_id=image_url)
         write_log(f"Borrado de la url", level="debug")
     except Exception as e:
-        #print(f"Error en la funcion delete_image_url: {e}")
         write_log(f"Error en la funcion delete_image_url: {e}", level="error")
     return None
 
@@ -119,10 +116,8 @@ def image_tags(image_url,image_file_id,min_confidence):
             delete_image_url(image_file_id)
             return tags
         except Exception as e:
-            #print(f"Error en la funcion image_tags: {e}")
             write_log(f"Error en la funcion image_tags: {e}", level="error")
             return None
-#FALTA LA FUNCION PARA ELIMINAR EL RASTRO DE LA WEB
 
 # DEVUELVE EL TAMAÑO DE LA IMAGEN
 def image_size(ruta_imagen):
@@ -136,7 +131,6 @@ def image_size(ruta_imagen):
         return size_kb
     
     except Exception as e:
-            #print(f"Ocurrió un error: {e}")
             write_log(f"Error en la funcion image_size: {e}", level="error")
             return None
 
