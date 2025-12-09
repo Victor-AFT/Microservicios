@@ -7,11 +7,7 @@ import logging
 
 def create_app():
     app = Flask(__name__)
-    #Configuración de logging
-    
 
-    
-    # existing code omitted
     from . import views
     app.register_blueprint(views.bp)
 
