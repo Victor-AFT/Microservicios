@@ -5,6 +5,7 @@
 from flask import Blueprint, request, jsonify
 from . import controller
 from . import models
+
 #API - DECLARACION ENDPOINTS
 
 bp = Blueprint('images', __name__, url_prefix='/')
@@ -43,7 +44,7 @@ def upload_image():
         controller.write_log(f"Peticion POST -> escribiendo datos picture en BBDD ", level="debug")
         models.registro_BBDD(image_uuid, path_image, tags)
 
-        #NOTA MIRAR TAGS
+     
         controller.write_log(f"Peticion POST -> retornando resultado ", level="debug")
         return jsonify({
             "id": image_uuid,
@@ -57,7 +58,7 @@ def upload_image():
         controller.write_log(f"error: {str(e)}", level="error")
         return jsonify({"error": str(e)}), 500
         
-        
+#Estado del api web 
 @bp.route("/status", methods=["GET"])
 def ping():
     return jsonify({"status": "ok", "message": "Servidor funcionando correctamente"}), 200
@@ -75,7 +76,7 @@ def get_images():
         controller.write_log(f"Peticion GET -> /images  buscando las imagenes con los filtros {min_date,max_date}", level="debug")
         imgs = models.query_filtros(min_date, max_date)
         controller.write_log(f"Peticion GET -> /images  resultado busqueda  {imgs}", level="debug")
-        #print(imgs)
+       
         for cc in imgs:
             print(cc)
             respuesta.append({
@@ -95,7 +96,7 @@ def get_images():
 
 @bp.route("/images/<image_id>", methods=["GET"])
 def get_image(image_id):
-    #image_uuid = request.get(image_id)
+  
     controller.write_log(f"Peticion GET -> /images/id  iniciando peticion  ", level="debug")
     if not image_id:
         return jsonify({"error": "Imagen no encontrada"}), 404
