@@ -8,5 +8,5 @@ Existirán los siguientes microservicios:
 - API: implementada en Flask y servida mediante waitress.
 - Base de datos: utilizaremos una base de datos MySQL 8.0.
 
-A continuación se describen las propiedades de cada elemento y las tareas a realizar:
+
 <img width="793" height="407" alt="image" src="https://github.com/user-attachments/assets/56b20b17-8b40-4c50-a22a-7588288ab579" />
